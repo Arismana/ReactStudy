@@ -64,6 +64,10 @@
          注意，git push时会把本地当前分支上所有被commit的内容提交到远程仓库的分支中
          这样就可以一天中多次commit，工作结束时一次push
 
+         git branch #查看本地分支信息，※标记的是当前所在本地分支
+         git brach -vv #查看本地分支与远程分支的对应信息
+         git checkout 分支名 #切换本地分支
+
 
 
 
