@@ -70,6 +70,91 @@
          注意：由于不同分支代码版本不同，所以切换分支之前一定要先将修改commit。切换到其他分支后由于版本不同代码会变化要先知。
 
 
+## 2025.8.20
 
+1.  React的新语法结构：JSX，其相当于JavaScript + XML。其中XML是一种类HTML的数据传输格式
 
+语法规则例：
+
+  function App() { #定义App组件
+ 
+  const names = ["Mike","Sarah","James"]
+
+  return (
+    <> #必须有唯一的根元素
+      <div>
+        <ul> #HTML定义结构
+          {
+            names.map(function(e,i){
+              return <li>{e}</li>  #JS定义数据展示和交互规则
+            })
+          }
+        </ul>
+      </div>
+    </>
+  )
+}
+
+2.  条件渲染
+
+function App() {
+
+  const flag = true
+
+  return (
+    <>
+      {flag?<div>show</div>:<div>hide</div>}
+    </>
+  )
+}
+
+3.  组件的定义与使用
+
+方式一：函数组件
+
+const Banner = (props) =>{
+    return <div>函数式组件</div>
+}
+
+export default Banner;
+
+方式二：类组件
+
+import React from "react";
+export default class Header extends React.Component{
+    render(){
+        return(
+            <div>
+                类组件
+            </div>
+        )
+    }
+}
+
+使用方式：
+
+import Header form "";
+
+\<Header />
+
+4.  组件通信
+
+父组件：
+
+\<Banner name = "jackey" age = "24"/>
+
+子组件：
+
+const Banner = (props) =>{
+
+    return (
+        <>
+        \<div>函数式组件</div>
+        \<div>今天是: {formatDate()}</div>
+        \<div>名字：{props.name}</div>
+        \<div>年龄：{props.age}</div>
+        </>
+    )
+    
+}
 
