@@ -158,3 +158,86 @@ const Banner = (props) =>{
     
 }
 
+## 2025.8.21
+
+1.  &&运算符的活用
+
+    function Item({ name, isPacked }) {
+
+      return (
+
+        <li className="item">
+           {name} {isPacked && '✅'} ##当isPacked为true时，✅会被渲染
+        </li>
+     );
+}
+
+2.  列表渲染
+
+  假设存在以下数据：
+
+  const people = 
+  [{
+  id: 0,
+  name: '凯瑟琳·约翰逊',
+  profession: '数学家',
+}, {
+  id: 1,
+  name: '马里奥·莫利纳',
+  profession: '化学家',
+}, {
+  id: 2,
+  name: '穆罕默德·阿卜杜勒·萨拉姆',
+  profession: '物理学家',
+}, {
+  id: 3,
+  name: '珀西·莱温·朱利亚',
+  profession: '化学家',
+}, {
+  id: 4,
+  name: '苏布拉马尼扬·钱德拉塞卡',
+  profession: '天体物理学家',
+}];
+
+通过filter筛选数据：
+
+const chemists = people.filter(person =>
+  person.profession === '化学家' 
+);
+
+通过map便利数据：
+
+const listItems = chemists.map(
+  person =>
+  \<li>
+     \<img
+       src={getImageUrl(person)}
+       alt={person.name}
+     />
+    \<p>
+       <b>{person.name}:</b>
+       {' ' + person.profession + ' '}
+       因{person.accomplishment}而闻名世界
+     </p>
+  </li>
+);
+
+※注意1：列表的每一项都需要一个唯一的key，而且最好不要使用索引当作key
+※注意2：在任何位置，return一个组件时，都要有一个根容器，如：
+
+   return (
+
+    <article>
+      {poem.lines.map((line, index) => #哪怕是箭头函数的隐式return，也要加根容器
+       <div key={index}>
+        {index>0?<hr />:''}
+         <p>
+          {line}
+         </p>
+       </div>
+      )}
+    </article>
+
+  );
+
+
