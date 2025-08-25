@@ -242,3 +242,35 @@ const listItems = chemists.map(
   );
 
 
+## 2025.8.25
+
+1. 保持组件纯粹性
+
+let guest = 0;
+
+function Cup() {
+
+  // Bad：正在更改预先存在的变量！
+
+  guest = guest + 1;
+
+  return \<h2>Tea cup for guest #{guest}\</h2>;
+
+}
+
+export default function TeaSet() {
+  return (
+
+    <>
+      <Cup />
+      <Cup />
+      <Cup />
+    </>
+
+  );
+}
+
+如上所示，在一个组件中最好不要尝试改变组件之外的变量。
+
+此即为组件的纯粹性
+
