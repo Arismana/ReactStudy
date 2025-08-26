@@ -137,7 +137,7 @@ import Header form "";
 
 \<Header />
 
-4.  组件通信
+4.  组件通信1
 
 父组件：
 
@@ -157,6 +157,37 @@ const Banner = (props) =>{
     )
     
 }
+
+5.  组件通信2
+
+function AlertButton({ children }) {
+
+  return (
+
+    <button>
+      {children}
+    </button>
+  );
+
+}
+
+export default function Toolbar() {
+
+  return (
+
+    <div>
+      <AlertButton>
+        播放电影
+      </AlertButton>
+      <AlertButton>
+        上传图片
+      </AlertButton>
+    </div>
+  );
+}
+
+※如上所示，父组件在使用子组件时，可以在标签中加入文本信息，这些文本信息会在子组件中被当作children数据项读取。
+
 
 ## 2025.8.21
 
@@ -274,3 +305,109 @@ export default function TeaSet() {
 
 此即为组件的纯粹性
 
+
+## 2025.8.26
+
+1.  响应事件
+
+简单来说就是如何在组件上绑定监听事件。方法如下：
+
+  export default function Button() {
+
+  function handleClick() {
+
+    alert('你点击了我！');
+
+  }
+
+  return (
+
+    <button onClick={handleClick}>
+      点我
+    </button>
+
+  );
+}
+
+※需要注意的是，onClick属性中需要传递函数，而不是调用函数
+
+❌: onClick={handleClick()}
+
+2.  将事件函数作为props传递
+
+function Button({ onClick, children }) {
+
+  return (
+    
+    <button onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
+function UploadButton() {
+
+  return (
+
+    <Button onClick={() => alert('正在上传！')}>
+      上传图片
+    </Button>
+  );
+}
+
+3.  事件传播与阻止传播
+
+export default function Toolbar() {
+
+  return (
+
+    <div className="Toolbar" onClick={() => {
+      alert('你点击了 toolbar ！');
+    }}>
+      <button onClick={() => alert('正在播放！')}>
+        播放电影
+      </button>
+    </div>
+  );
+}
+
+※如上所示，当点击button之后，父节点（div）中的点击事件也会被触发。此之为事件传播。
+
+※这种传播有时会带来不利影响，因此需要阻止其传播。
+
+export default function Button() {
+
+  return (
+
+    <div className="Toolbar" onClick={() => {
+      alert('点击了 toolbar');
+    }}>
+      <button onClick={(e) => {
+        e.stopPropagation()
+        alert("点击了button")
+      }}>
+        播放电影
+      </button>
+    </div>
+  );
+}
+
+※阻止方法为在子节点中加入 e.stopPropagation() 代码
+
+4.  阻止事件触发时的默认行为
+
+export default function Signup() {
+
+  return (
+
+    <form onSubmit={e => {
+      e.preventDefault();
+      alert('提交表单！');
+    }}>
+      <input />
+      <button>发送</button>
+    </form>
+  );
+}
+
+※如上所示，使用 e.preventDefault() 可以阻止表单提交时的重新加载页面的行为

@@ -3,6 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Header from './components/Header'
 import Banner from './components/Banner'
+import Button from './components/button'
+import Toolbar from './components/Toolbar'
 // import './App.css '
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
       </div>
 
       {flag?<div>show</div>:<div>hide</div>}
+
+      <Button />
+      <Toolbar />
     </>
   )
 }
