@@ -69,6 +69,14 @@
          git checkout 分支名 #切换本地分支
          注意：由于不同分支代码版本不同，所以切换分支之前一定要先将修改commit。切换到其他分支后由于版本不同代码会变化要先知。
 
+         git合并分支与提交远程仓库
+
+         git status #确认所有修改以提交
+         git checkout main #切换本地主分支
+         git pull origin main #保持本地主分支与远程主分支同步，防止冲突
+         git merge 本地分支名 #合并本地分支到main
+         git push origin main #推送到远程main
+
 
 ## 2025.8.20
 
