@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Banner from './components/Banner'
 import Button from './components/button'
 import Toolbar from './components/Toolbar'
+import Gallery from './components/Gallery'
 // import './App.css '
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
 
       <Button />
       <Toolbar />
+      <Gallery />
     </>
   )
 }

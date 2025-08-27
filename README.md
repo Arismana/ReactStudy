@@ -411,3 +411,109 @@ export default function Signup() {
 }
 
 ※如上所示，使用 e.preventDefault() 可以阻止表单提交时的重新加载页面的行为
+
+## 2025.8.27
+
+1.  state变量
+
+※如下代码所示普通的局部变量既无法在重新渲染中持久保持，其更改也不会触发重新渲染。
+
+export default function Gallery() {
+  let index = 0; ※index作为一个普通的局部变量，其改变无法触发重新渲染，也无法在重新渲染中保持。
+
+  function handleClick() {
+    index = index + 1;
+  }
+
+  return (
+
+    <>
+      <button onClick={handleClick}>
+        Next
+      </button>
+      <p>
+        index
+      </p>
+    </>
+  );
+}
+
+※此时需要引入state变量来达到以上效果，引入方法如下：
+
+import { useState } from 'react';
+
+const [index, setIndex] = useState(0); ※useState函数返回一个数组，其中包含state变量(index，初始值为0)和对应的setter函数(setIndex)
+
+function handleClick() {
+
+  setIndex(index + 1); ※使用setter函数修改state变量
+
+}
+
+2.  Hook函数
+
+※一类特殊的函数，以use开头，上述useState即使其中一个
+※只能在组件最顶层调用，不能在条件或循环语句中使用 (Error:Rendered fewer hooks than expected. )
+※const [index, setIndex] = useState(0) 类似于一个声明函数，index, setIndex，以及index的初始值均可自定义
+
+3.  state的构建原则
+
+         (1). 合并关联的state
+         const [position, setPosition] = useState({ x: 0, y: 0 });
+
+         ※如上面的例子中，坐标x和y总是同时存在同时修改的，因此完全可以把它们构建为一个对象，修改的方法为：
+
+         setPosition({
+          x: e.clientX,
+          y: e.clientY
+        });
+
+        (2). 避免state冗余
+        export default function Form() {
+          const [firstName, setFirstName] = useState('');
+          const [lastName, setLastName] = useState('');
+          const [fullName, setFullName] = useState('');
+
+          function handleFirstNameChange(e) {
+               setFirstName(e.target.value);
+               setFullName(e.target.value + ' ' + lastName);
+          }
+
+          function handleLastNameChange(e) {
+               setLastName(e.target.value);
+               setFullName(firstName + ' ' + e.target.value);
+          }
+
+          ※如上面的例子，FullName这个state是冗余的，因为每次改变FirstName或者LastName的时候，会重新触发渲染，因此直接计算FullName就行：
+
+          const fullName = firstName + ' ' + lastName;
+
+          (3).避免重复的state
+          ※当存在重复的state时，若其中一处修改，另一处忘记修改的话，就会导致数据冲突
+          
+          (4).扁平化state
+          ※当数据嵌套的太深会不利于state的更新，可以尝试将它们进行扁平化处理。
+
+          (5).避免过度使用state
+          State 变量仅用于在组件重渲染时保存信息。在单个事件处理函数中，普通变量就足够了。当普通变量运行良好时，不要引入 state 变量。
+
+3.  state的更新方法
+
+      export default function Counter() {
+
+      const [number, setNumber] = useState(0);
+
+        return (
+
+          <>
+          <h1>{number}</h1>
+          <button onClick={() => {
+             setNumber(number + 1);
+             setNumber(number + 1);
+             setNumber(number + 1);
+          }}>+3</button>
+          </>
+        )
+      }
+
+      ※如上所示，在点击button后，number不会实际+3，而只会+1。原因是，每次setNumber执行时，先读取当前的number为0，然后在下次重新渲染时更改为1。
