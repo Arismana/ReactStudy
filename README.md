@@ -524,4 +524,43 @@ function handleClick() {
         )
       }
 
-      ※如上所示，在点击button后，number不会实际+3，而只会+1。原因是，每次setNumber执行时，先读取当前的number为0，然后在下次重新渲染时更改为1。
+      ※如上所示，在点击button后，number不会实际+3，而只会+1。原因是，每次setNumber执行时，先读取当前的number为0，然后在下次重新渲染时(onClick的处理函数执行完毕后)更改为1。
+
+## 2025.8.28
+
+1.  React中的组件渲染
+
+        (1).触发渲染
+            1°.初次渲染：初次启动应用时触发
+            2°.状态更新渲染：通过set函数更改状态时触发
+        (2).开始渲染
+            1°.初次渲染：对根组件进行渲染
+            2°.状态更新渲染：仅渲染状态更新相关的组件
+        (3).DOM更新
+            1°.初次渲染：提交所有DOM节点
+            2°.状态更新渲染：仅更新与状态更新相关的DOM
+        (4).浏览器绘制
+            DOM更新结束后，浏览器会重新绘制(painting)屏幕
+
+2.  state的更新特性
+
+export default function Counter() {
+
+  const [number, setNumber] = useState(0);
+
+  return (
+
+    <>
+      <h1>{number}</h1>
+      <button onClick={() => {
+        setNumber(number + 5);
+        setTimeout(() => {
+          alert(number);
+        }, 3000);
+      }}>+5</button>
+    </>
+  )
+}
+
+※在上述代码中，点击按钮3秒后alert的内容并不是5，而是0
+※这个例子说明了，在一段代码的一次执行时，一个state变量是一个恒定的“快照”，不会随时间或者其他任何东西的改变而改变。它的改变反映在重新渲染后，再重新执行这段代码时。
