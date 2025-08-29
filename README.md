@@ -564,3 +564,148 @@ export default function Counter() {
 
 ※在上述代码中，点击按钮3秒后alert的内容并不是5，而是0
 ※这个例子说明了，在一段代码的一次执行时，一个state变量是一个恒定的“快照”，不会随时间或者其他任何东西的改变而改变。它的改变反映在重新渲染后，再重新执行这段代码时。
+
+## 2025.8.29
+
+1.  state更新队列
+
+const [number, setNumber] = useState(0);
+
+        return (
+
+          <>
+          <h1>{number}</h1>
+          <button onClick={() => {
+             setNumber(number + 1);
+             setNumber(number + 1);
+             setNumber(number + 1);
+          }}>+3</button>
+          </>
+        )
+
+※在这个例子中，点击事件结束重新渲染后，number变为1而不是3。这告诉了我们只有在事件处理函数中所有代码执行结束之后才会更新UI。
+
+※然而有时候我们可能会需要改变这个“没来得及更新的state”，可以使用以下的方法进行。
+
+return (
+
+    <>
+      <h1>{number}</h1>
+      <button onClick={() => {
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+        setNumber(n => n + 1);
+      }}>+3</button>
+    </>
+  )
+
+※n=>n+1被称为更新函数。其执行逻辑为,n代表state当前值（更新队列中的state），哪怕它暂时还没有被更新，仍然可以被n储存和迭代。
+
+return (
+
+    <>
+      <button onClick={() => {
+        setNumber(number + 5);
+        setNumber(n => n + 1);
+      }}>
+    </>
+  )
+
+※上面这个例子更容易看出来state的更新逻辑。
+※首先number被自增5，并添加到更新队列中。而n=>n+1则直接从更新队列中取出自增5后的number，再自增1。因此点击按钮之后，页面会显示6。
+
+2.  state的更新特性
+
+return (
+
+    async function handleClick() {
+      setCompleted(number+1);
+      await delay(3000);
+  }
+  )
+
+※在上面的代码中，无论点击得有多快，number始终及时刷新。说明state的更新不会等待延迟函数。
+
+3.  更改对象类型的state数据
+
+const [position, setPosition] = useState({x: 0,y: 0});
+
+※以上代码将一个对象类型的数据作为state数据，在修改时
+
+onPointerMove={e => {setPosition({x: e.clientX,y: e.clientY});}}
+
+※需要像这样再创建一个对象作为修改。而下面的修改方法是无法触发重新渲染的：
+
+onPointerMove={e => {position.x = e.clientX;position.y = e.clientY;}}
+
+4.  对象展开语法与对象型state数据的修改
+
+※state对象中若包含较多数据项，则可结合对象展开语法对state数据进行修改，像这样：
+
+ const [person, setPerson] = useState(
+  {
+
+    firstName: 'Barbara',
+    lastName: 'Hepworth',
+    email: 'bhepworth@sculpture.com'
+  });
+
+setPerson({
+
+      ...person, //对象展开语法
+
+      firstName: e.target.value
+    });
+
+5.  state嵌套对象的更新
+
+※对于以下的嵌套对象，若仅想更新其中的某一小项（city）
+
+const [person, setPerson] = useState({
+
+  name: 'Niki de Saint Phalle',
+
+  artwork: {
+
+    title: 'Blue Nana',
+    city: 'Hamburg',
+    image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+  }
+})
+
+※可以使用以下方法
+
+const nextArtwork = { ...person.artwork, city: 'New Delhi' };
+
+const nextPerson = { ...person, artwork: nextArtwork };
+
+setPerson(nextPerson);
+
+6.  Immer库
+
+※在更新嵌套对象时，使用Immer库可以更加简便
+
+npm install use-immer //安装
+
+//使用：
+
+import { useImmer } from 'use-immer';
+
+export default function Form() {
+
+  const [person, updatePerson] = useImmer({
+
+    name: 'Niki de Saint Phalle',
+    artwork: {
+      title: 'Blue Nana',
+      city: 'Hamburg',
+      image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+    }
+  });
+
+  function handleNameChange(e) {
+
+    updatePerson(draft => {
+      draft.name = e.target.value;
+    });
+  }
