@@ -1,11 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Header from './components/Header'
 import Banner from './components/Banner'
 import Button from './components/button'
 import Toolbar from './components/Toolbar'
 import Gallery from './components/Gallery'
+import AddArray from './components/AddArray'
+import DeleteArray from './components/DeleteArray'
 // import './App.css '
 
 function App() {
@@ -33,6 +32,8 @@ function App() {
       <Button />
       <Toolbar />
       <Gallery />
+      <AddArray />
+      <DeleteArray />
     </>
   )
 }

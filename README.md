@@ -709,3 +709,119 @@ export default function Form() {
       draft.name = e.target.value;
     });
   }
+
+  ## 2025.9.1
+
+1.  state数组的更新
+
+    ※首先需要知道的是，state数组和对象一样，单纯地更改其中的某个值是无法引起重新渲染的
+
+    ※因此，更新的关键在于重新创建一个数组，如下：
+
+    ![alt text](image.png)
+
+2.  向数组中添加元素
+
+    let nextId = 0;
+
+    const [artists, setArtists] = useState([]);
+
+    <button onClick={() => {
+        artists.push({
+          id: nextId++,
+          name: name,
+        });
+      }}>添加\</button>
+
+    ※如上所示，点击按钮之后，由于数组没有被替换，因此不会触发重新渲染
+
+    ※正确的更新方法如下：
+
+    setArtists([
+          ...artists,
+          { id: nextId++, name: name }
+        ]);
+
+3.  从数组中删除元素
+
+    ※最简单的方法就是筛选过滤法，返回一个筛选后的数组：
+
+    setArtists(
+      artists.filter(a => a.id !== artist.id)
+    );
+
+    ※上代码中artist.id即是要删除的元素的id
+
+4.  更改数组中的某些元素
+
+    function handleClick() {
+
+    const nextShapes = shapes.map(shape => {
+
+      if (shape.type === 'square') {
+
+        // 不作改变
+        return shape;
+      } else {
+
+        // 返回一个新的圆形，位置在下方 50px 处
+        return {
+          ...shape,
+          y: shape.y + 50,
+        };
+      }
+    });
+
+    setShapes(nextShapes);
+
+  }
+
+  ※如上所示，可使用map函数遍历整个数组，然后依次修改要修改的项目，最后将返回的数组作为setShapes函数的参数即可达到目的。
+
+  5.  在数组任何位置插入元素
+
+    function handleClick() {
+
+    const insertAt = 1; // 可能是任何索引
+    const nextArtists = [
+      // 插入点之前的元素：
+      ...artists.slice(0, insertAt),
+      // 新的元素：
+      { id: nextId++, name: name },
+      // 插入点之后的元素：
+      ...artists.slice(insertAt)
+    ];
+    setArtists(nextArtists);
+    setName('');
+  }
+
+  ※如上所示，使用slice函数，对原数组进行剪切和拼接，创造新数组即可。
+
+  6.  数组的翻转与排序
+
+      ※正常情况下，JavaScript中的reverse方法和sort方法是不会返回一个新数组的，所以可以先拷贝一个数组，处理完整之后再赋值给setArray函数，如下：
+
+      function handleClick() {
+
+          const nextList = [...list];
+          nextList.reverse();
+          setList(nextList);
+      }
+
+      ※但是需要注意的是，当list中的数据为对象类型时，[...list]这样的浅复制可能会带来问题，如下：
+
+      const nextList = [...list];
+
+      nextList[0].seen = true; // 问题：list[0]也会被改变
+
+      setList(nextList);
+
+      ※因此，在处理对象类型的数据时需要格外小心，一定要确保新建一个对象，再对它进行修改。当然也可以使用Immer修改。
+
+
+
+
+
+
+
+
