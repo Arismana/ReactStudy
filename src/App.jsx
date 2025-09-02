@@ -5,6 +5,7 @@ import Toolbar from './components/Toolbar'
 import Gallery from './components/Gallery'
 import AddArray from './components/AddArray'
 import DeleteArray from './components/DeleteArray'
+import Guess from './components/Guess'
 // import './App.css '
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
       <Gallery />
       <AddArray />
       <DeleteArray />
+      <Guess />
     </>
   )
 }

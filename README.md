@@ -818,6 +818,38 @@ export default function Form() {
 
       ※因此，在处理对象类型的数据时需要格外小心，一定要确保新建一个对象，再对它进行修改。当然也可以使用Immer修改。
 
+  ## 2025.9.2
+
+  1.  声明式UI与命令式UI
+
+      ※简而言之，命令式UI需要写好一堆判断逻辑，当触发某种条件之后，去执行预先创建好的函数。“告诉系统每一步怎么走”。
+      
+        async function handleFormSubmit(e) {
+
+          e.preventDefault();
+          disable(textarea);
+          disable(button);
+          show(loadingMessage);
+          hide(errorMessage);
+            try {
+              await submitForm(textarea.value);
+              show(successMessage);
+              hide(form);
+            } catch (err) {
+              show(errorMessage);
+              errorMessage.textContent = err.message;
+            } finally {
+              hide(loadingMessage);
+              enable(textarea);
+              enable(button);
+            }
+        }
+
+      ※而声明式UI则需要预先定义好系统状态变量，当系统处于某种状态时，相应的UI会自动被渲染出来。如本文件夹下的Guess组件所示。
+
+  
+
+
 
 
 
