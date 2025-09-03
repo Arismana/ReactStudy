@@ -847,6 +847,64 @@ export default function Form() {
 
       ※而声明式UI则需要预先定义好系统状态变量，当系统处于某种状态时，相应的UI会自动被渲染出来。如本文件夹下的Guess组件所示。
 
+## 2025.9.3
+
+  1.  组件间共享变量
+
+    ※情况分析：现有两个信息展示域，点击展开其中一个，另一个必须关闭展示。
+
+    import { useState } from 'react';
+
+    export default function Accordion() {
+        const [activeIndex, setActiveIndex] = useState(0);
+        return (
+            <>
+            <h2>哈萨克斯坦，阿拉木图</h2>
+            <Panel
+              title="关于"
+              isActive={activeIndex === 0}
+              onShow={() => setActiveIndex(0)}
+            >
+              阿拉木图人口约200万，是哈萨克斯坦最大的城市。它在 1929 年到 1997 年间都是首都。
+            </Panel>
+            <Panel
+              title="词源"
+              isActive={activeIndex === 1}
+              onShow={() => setActiveIndex(1)}
+            >
+            这个名字来自于 <span lang="kk-KZ">алма</span>，哈萨克语中“苹果”的意思，经常被翻译成“苹果之乡”。事实上，阿拉木图的周边地区被认为是苹果的发源地，<i lang="la">Malus sieversii</i> 被认为是现今苹果的祖先。
+            </Panel>
+        </>
+        );
+    }
+
+      function Panel({
+        title,
+        children,
+        isActive,
+        onShow
+      }) {
+        return (
+          <section className="panel">
+            <h3>{title}</h3>
+            {isActive ? (
+              <p>{children}</p>
+            ) : (
+              <button onClick={onShow}>
+                显示
+              </button>
+            )}
+          </section>
+        );
+      }
+
+      ※如上代码所示，在父组件Accordion中，为子组件传入isActive变量，控制它们的显示与隐藏。
+      ※在点击每个板块的按钮时，将处理函数留在了父组件中。通过修改父组件的共同变量，同时控制两个子组件的状态。
+
+
+
+
+
   
 
 
